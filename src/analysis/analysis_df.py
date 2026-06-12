@@ -19,8 +19,15 @@ ATRIBUTOS_IMPORTANTES = [
     "texture_mean"
 ]
 
+ROOT_DIR = Path(__file__).resolve().parents[2]
+OUTPUT_DIR = ROOT_DIR / "docs" / "figures" 
+
+RAW_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+PROCESSED_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+
+
 def load_dataset(path: Path) -> pd.DataFrame:
-    """ Carrega o dataset WDBC a partir do caminho especificado. """
+    # Carrega o dataset WDBC a partir do caminho especificado. 
     colunas = ["id", 
                "diagnosis", 
                *ATRIBUTOS_IMPORTANTES]
@@ -28,6 +35,20 @@ def load_dataset(path: Path) -> pd.DataFrame:
     df["diagnosis_label"] = df["diagnosis"].map({"B": "Benigno", "M": "Maligno"})
 
     return df
+
+def save_plot(grafico: plt.figure, nome_grafico: str, dataset_type: str):
+    # Salvar o grafico, e guarda em uma pasta de graficos do dataset raw ou type
+
+    if(dataset_type not in {"raw", "processed"}):
+        # So deve permitir graficos do tipo de dataset raw ou processed
+        raise ValueError(f"Tipo do dataset invalido: {dataset_type}")
+
+
+    output_path = OUTPUT_DIR / dataset_type
+    output_path.mkdir(parents=True, exist_ok=True)
+
+    grafico.savefig(output_path / nome_grafico, dpi = 300, bbox_inches = "tight")
+    plt.close(grafico)
 
 """ Testando as funções """
 def main():
