@@ -1,3 +1,5 @@
+from typing import Iterable
+
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sb
@@ -12,7 +14,7 @@ O intuito do módulo analysis concentra-se exclusivamente na análise dos dados 
 - interpretação dos padrões observados.
 """
 
-ATRIBUTOS_IMPORTANTES = [
+ATRIBUTOS_TUMOR = [
     "radius_mean",
     "texture_mean",
     "perimeter_mean",
@@ -45,6 +47,15 @@ ATRIBUTOS_IMPORTANTES = [
     "fractal_dimension_worst",
 ]
 
+ATRIBUTOS_IMPORTANTES = [
+    "radius_mean",
+    "texture_mean",
+    "perimeter_mean",
+    "area_mean",
+    "symmetry_mean",
+
+]
+
 ROOT_DIR = Path(__file__).resolve().parents[2]
 OUTPUT_DIR = ROOT_DIR / "docs" / "figures" 
 
@@ -53,7 +64,7 @@ def load_dataset(path: Path) -> pd.DataFrame:
     # Carrega o dataset WDBC a partir do caminho especificado. 
     colunas = ["id", 
                "diagnosis", 
-               *ATRIBUTOS_IMPORTANTES]
+               *ATRIBUTOS_TUMOR]
     df = pd.read_csv(path, header=None, names=colunas)
     df["diagnosis_label"] = df["diagnosis"].map({"B": "Benigno", "M": "Maligno"})
 
@@ -74,7 +85,8 @@ def save_plot(grafico: plt.figure, nome_grafico: str, dataset_type: str):
     plt.close(grafico)
 
 def plot_class_distribution(df: pd.DataFrame, dataset_type: str):
-    # modela o grafico
+    # Cria um grafico sobre a distribuição de benigno e maligno
+    # modela um grafico
     fig, ax = plt.subplots(figsize=(6,4))
     sb.countplot(data=df, x="diagnosis_label", order=["Benigno", "Maligno"], ax=ax)
     ax.set_title("Distribuição de Tumores")
@@ -88,11 +100,33 @@ def plot_class_distribution(df: pd.DataFrame, dataset_type: str):
     # salva o grafico
     save_plot(fig, "distribuicao_BM.png", dataset_type)
 
+def plot_boxplot(df: pd.DataFrame, atributos: Iterable[str], dataset_type: str):
+
+    atributos_list = list(atributos)
+
+    fig, axs = plt.subplot(len(atributos_list), 1, figsize=(8, 3*len(atributos_list)), sharex=False)
+
+    for ax, atributo in zip(axs, atributos_list):
+        sb.boxplot(
+            data=df,
+            x="diagnosis_label",
+            y=atributo,
+            order=["Benigno", "Maligno"],
+            ax=ax,
+        )
+        ax.set_title(atributo.replace("_", " ").title())
+        ax.set_xlabel("Classe")
+    fig.tight_layout()
+    save_plot(fig, "boxplot_atributos.png", {dataset_type})
+
+
+    
 """ Testando as funções """
 def main():
     path_raw = Path("data/raw/wdbc.data")
     df = load_dataset(path_raw)
     plot_class_distribution(df, "raw")
+    plot_boxplot(df, ATRIBUTOS_IMPORTANTES, "raw")
 
 if __name__ == "__main__":
     main()        
