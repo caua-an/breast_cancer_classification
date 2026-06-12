@@ -1,9 +1,9 @@
-from typing import Iterable
 
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sb
 from pathlib import Path
+from typing import Iterable
 
 """Análise exploratória do dataset WDBC para identificar padrões entre tumores benignos e malignos.
 O intuito do módulo analysis concentra-se exclusivamente na análise dos dados brutos, com foco em:
@@ -101,7 +101,7 @@ def plot_class_distribution(df: pd.DataFrame, dataset_type: str):
     save_plot(fig, "distribuicao_BM.png", dataset_type)
 
 def plot_boxplot(df: pd.DataFrame, atributos: Iterable[str], dataset_type: str):
-
+    # Cria um grafico boxplot sobre os atributos iteraveis selecionados 
     atributos_list = list(atributos)
 
     fig, axs = plt.subplot(len(atributos_list), 1, figsize=(8, 3*len(atributos_list)), sharex=False)
