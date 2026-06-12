@@ -104,7 +104,7 @@ def plot_boxplot(df: pd.DataFrame, atributos: Iterable[str], dataset_type: str):
     # Cria um grafico boxplot sobre os atributos iteraveis selecionados 
     atributos_list = list(atributos)
 
-    fig, axs = plt.subplot(len(atributos_list), 1, figsize=(8, 3*len(atributos_list)), sharex=False)
+    fig, axs = plt.subplots(len(atributos_list), 1, figsize=(8, 3*len(atributos_list)), sharex=False)
 
     for ax, atributo in zip(axs, atributos_list):
         sb.boxplot(
@@ -117,16 +117,38 @@ def plot_boxplot(df: pd.DataFrame, atributos: Iterable[str], dataset_type: str):
         ax.set_title(atributo.replace("_", " ").title())
         ax.set_xlabel("Classe")
     fig.tight_layout()
-    save_plot(fig, "boxplot_atributos.png", {dataset_type})
+    save_plot(fig, "boxplot_atributos.png", dataset_type)
 
+def plot_histograms(df: pd.DataFrame, atributos: Iterable[str], dataset_type: str):
+    atributos_list = list(atributos)
 
+    fig, axs = plt.subplots(len(atributos_list), 1, figsize=(8,3*len(atributos_list)), sharex=False)
+
+    for ax, atributo in zip(axs, atributos_list):
+        sb.histplot(
+            data=df,
+            x=atributo,
+            hue="diagnosis_label",
+            kde=True,
+            bins=25,
+            palette="Set1",
+            alpha=0.6,
+            ax=ax,
+        )
+        ax.set_title(atributo.replace("_", " ").title())
+        ax.set_xlabel(atributo)
+        ax.set_ylabel("Frequência")
+
+    fig.tight_layout()
+    save_plot(fig, "histogramas_atributos.png", dataset_type)
     
 """ Testando as funções """
 def main():
-    path_raw = Path("data/raw/wdbc.data")
+    path_raw = ROOT_DIR / "data"/ "raw"/ "wdbc.data"
     df = load_dataset(path_raw)
     plot_class_distribution(df, "raw")
     plot_boxplot(df, ATRIBUTOS_IMPORTANTES, "raw")
+    plot_histograms(df, ATRIBUTOS_IMPORTANTES, "raw")
 
 if __name__ == "__main__":
     main()        
