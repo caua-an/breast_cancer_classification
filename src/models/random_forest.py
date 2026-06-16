@@ -7,7 +7,8 @@ from sklearn.metrics import (
     precision_score,
     recall_score,
     f1_score,
-    confusion_matrix
+    confusion_matrix,
+    classification_report
 )
 
 
@@ -54,8 +55,28 @@ def main():
     print(f"Recall   : {recall_score(y_test, y_pred):.4f}")
     print(f"F1-score : {f1_score(y_test, y_pred):.4f}")
 
+    feature_importance = pd.DataFrame({
+    "feature": X.columns,
+    "importance": model.feature_importances_
+})
+
+    feature_importance = feature_importance.sort_values(
+        by="importance",
+        ascending=False
+    )
+
+    print("\nTop 10 Features:")
+    print(feature_importance.head(10))
+
+    # Matriz de confusão
+
     print("\nConfusion Matrix")
     print(confusion_matrix(y_test, y_pred))
+
+    # Relatório de classificação
+
+    print("\nClassification Report")
+    print(classification_report(y_test, y_pred))
 
 
 if __name__ == "__main__":
