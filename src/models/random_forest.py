@@ -1,16 +1,20 @@
 import pandas as pd
 
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import (
+    train_test_split,
+    cross_val_score
+)
+
 from sklearn.metrics import (
     accuracy_score,
     precision_score,
     recall_score,
     f1_score,
     confusion_matrix,
-    classification_report
+    classification_report 
 )
-
+  
 
 def main():
 
@@ -38,6 +42,23 @@ def main():
         random_state=42
     )
 
+    # Cross-validation
+
+    scores = cross_val_score(
+    model,
+    X,
+    y,
+    cv=5,
+    scoring="accuracy"
+)
+
+    print("\n===== RANDOM FOREST =====")
+
+    print("\n===== CROSS VALIDATION =====")
+    print("Scores:", scores)
+    print(f"Mean Accuracy: {scores.mean():.4f}")
+    print(f"Standard Deviation: {scores.std():.4f}")
+
     #Treinar o modelo
 
     model.fit(X_train, y_train)
@@ -46,7 +67,7 @@ def main():
 
     y_pred = model.predict(X_test)
 
-    print("\n===== RANDOM FOREST =====")
+    
 
     # Metricas de avaliação
 
