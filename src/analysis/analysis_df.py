@@ -48,11 +48,16 @@ ATRIBUTOS_TUMOR = [
 ]
 
 ATRIBUTOS_IMPORTANTES = [
+    "concave_points_mean",
     "radius_mean",
-    "texture_mean",
     "perimeter_mean",
+    "concavity_mean",
     "area_mean",
-    "symmetry_mean",
+    "area_worst",
+    "concave_points_worst",
+    "radius_worst",
+    "perimeter_worst",
+    "concavity_worst",
 
 ]
 
@@ -61,11 +66,18 @@ OUTPUT_DIR = ROOT_DIR / "docs" / "figures"
 
 
 def load_dataset(path: Path) -> pd.DataFrame:
-    # Carrega o dataset WDBC a partir do caminho especificado. 
-    colunas = ["id", 
-               "diagnosis", 
-               *ATRIBUTOS_TUMOR]
-    df = pd.read_csv(path, header=None, names=colunas)
+    # Carrega o dataset WDBC a partir do caminho especificado.
+    # O arquivo raw original não tem cabeçalho e contém a coluna `id`.
+    # O arquivo processado/normalizado já tem cabeçalho e não contém `id`.
+    with path.open("r", encoding="utf-8") as f:
+        first_line = f.readline().strip()
+
+    if first_line.startswith("diagnosis,"):
+        df = pd.read_csv(path)
+    else:
+        colunas = ["id", "diagnosis", *ATRIBUTOS_TUMOR]
+        df = pd.read_csv(path, header=None, names=colunas)
+
     df["diagnosis_label"] = df["diagnosis"].map({"B": "Benigno", "M": "Maligno"})
 
     return df
@@ -149,6 +161,13 @@ def main():
     plot_class_distribution(df, "raw")
     plot_boxplot(df, ATRIBUTOS_IMPORTANTES, "raw")
     plot_histograms(df, ATRIBUTOS_IMPORTANTES, "raw")
+
+    # plotagem de gráficos com dados processados/normalizados
+    
+    path_processed = ROOT_DIR / "data" / "processed" / "wdbc_data_normalized.csv"
+    df_pr = load_dataset(path_processed)
+    plot_boxplot(df_pr, ATRIBUTOS_IMPORTANTES, "processed")
+    plot_histograms(df_pr, ATRIBUTOS_IMPORTANTES, "processed")
 
 if __name__ == "__main__":
     main()        
