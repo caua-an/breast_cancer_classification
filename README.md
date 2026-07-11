@@ -190,16 +190,4 @@ Para cada modelo são reportadas:
 
 ---
 
-## 🔧 Possíveis Melhorias
-
-Algumas sugestões para evoluir o projeto:
-
-- Adicionar um **`requirements.txt`** para fixar as versões das dependências;
-- Incluir uma **matriz de correlação** na análise exploratória, mencionada no objetivo do módulo;
-- Comparar os modelos também sobre a versão **sem outliers** do dataset;
-- Explorar **ajuste de hiperparâmetros** (ex.: `GridSearchCV`) para otimizar os modelos;
-- Salvar os modelos treinados (ex.: com `joblib`) para reutilização.
-
----
-
-> Projeto de Ciência de Dados / Machine Learning aplicado ao diagnóstico de câncer de mama. 🎓
+> Projeto da matéria Inteligência Artificial usando Machine Learning aplicado ao diagnóstico de câncer de mama. 🎓
