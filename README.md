@@ -13,7 +13,6 @@ Projeto de **Machine Learning** para classificação de tumores de mama como **b
 - [Estrutura do Projeto](#-estrutura-do-projeto)
 - [Como Executar](#-como-executar)
 - [Modelos e Avaliação](#-modelos-e-avaliação)
-- [Possíveis Melhorias](#-possíveis-melhorias)
 
 ---
 
